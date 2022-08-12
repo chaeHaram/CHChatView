@@ -13,6 +13,7 @@
 		833DD7CB28A665770019B379 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 833DD7C928A665770019B379 /* Main.storyboard */; };
 		833DD7CD28A665780019B379 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 833DD7CC28A665780019B379 /* Assets.xcassets */; };
 		833DD7D028A665780019B379 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 833DD7CE28A665780019B379 /* LaunchScreen.storyboard */; };
+		833DD7D828A66E6E0019B379 /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		833DD7CC28A665780019B379 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		833DD7CF28A665780019B379 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		833DD7D128A665780019B379 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				833DD7C328A665770019B379 /* AppDelegate.swift */,
 				833DD7C528A665770019B379 /* SceneDelegate.swift */,
 				833DD7C728A665770019B379 /* ViewController.swift */,
+				833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */,
 				833DD7C928A665770019B379 /* Main.storyboard */,
 				833DD7CC28A665780019B379 /* Assets.xcassets */,
 				833DD7CE28A665780019B379 /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 				833DD7C828A665770019B379 /* ViewController.swift in Sources */,
 				833DD7C428A665770019B379 /* AppDelegate.swift in Sources */,
 				833DD7C628A665770019B379 /* SceneDelegate.swift in Sources */,
+				833DD7D828A66E6E0019B379 /* ChattingTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
