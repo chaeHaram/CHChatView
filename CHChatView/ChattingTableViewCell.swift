@@ -49,8 +49,8 @@ class ChattingTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default , reuseIdentifier: "ProfileCell")
-        setConstraints()
         addSubView()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
