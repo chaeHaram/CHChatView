@@ -15,31 +15,49 @@ class ViewController: UIViewController {
         return tableView
     }()
 
-    var randInt: Int = Int.random(in: 1...50)
+    var randInt: Int = Int.random(in: 1...5)
     var sectionName: [String] = ["", "친구"]
-    var imageList = MyDB.imageList
-    let imageURL: URL = URL(string: "https://picsum.photos/v2/list")!
+    let imageList = MyDB.imageList
+    let nameList = MyDB.nameList
+    let statusList = MyDB.statusList
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(randInt)
-        chattingTableView.delegate = self
-        chattingTableView.dataSource = self
-        chattingTableView.register(ChattingTableViewCell.self, forCellReuseIdentifier: "ProfileCell")
-        
         addSubView()
         setConstraints()
+        
         for _ in 0..<randInt - 1 {
             appendImage()
             appendName()
             appendStatus()
         }
         
+        configureTableView()
+        
         sectionName[1] = "친구 \(randInt - 1)"
         
         title = "친구"
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+//        configureData()
+//        print()
+    }
+    
+//    func configureData() {
+//        let imageList = MyDB.imageList
+//        let nameList = MyDB.nameList
+//        let statusList = MyDB.statusList
+//    }
+    
+    func configureTableView() {
+        chattingTableView.delegate = self
+        chattingTableView.dataSource = self
+        chattingTableView.register(ChattingTableViewCell.self, forCellReuseIdentifier: "ProfileCell")
     }
     
     func addSubView() {
@@ -62,8 +80,11 @@ class ViewController: UIViewController {
                 print("result : \(result)")
                 return
             }
-            let imageInfo = RandomImage(url: image.url)
+            let imageInfo = RandomImage(download_url: image.download_url)
             MyDB.imageList.append(imageInfo)
+            DispatchQueue.main.async {
+                self.chattingTableView.reloadData()
+            }
             print(MyDB.imageList)
         }
     }
@@ -76,6 +97,9 @@ class ViewController: UIViewController {
             }
             let nameInfo = RandomName(name: name.name)
             MyDB.nameList.append(nameInfo)
+            DispatchQueue.main.async {
+                self.chattingTableView.reloadData()
+            }
             print(MyDB.nameList)
         }
     }
@@ -87,8 +111,11 @@ class ViewController: UIViewController {
                 return
             }
             let statusInfo = RandomStatus(slip: status.slip)
-            print(statusInfo)
-            print(MyDB.adviceList)
+            MyDB.statusList.append(statusInfo)
+            DispatchQueue.main.async {
+                self.chattingTableView.reloadData()
+            }
+            print(MyDB.statusList)
         }
     }
 }
@@ -98,13 +125,18 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as? ChattingTableViewCell else { return UITableViewCell() }
         
         if indexPath.section == 0 {
-            cell.profilePhoto.image = UIImage(named: "myProfile")
-            cell.nameLabel.text = "정찬욱"
-            cell.statusLabel.text = "이게 전대용"
+            cell.profilePhoto.image = MyDB.myImage
+            cell.nameLabel.text = MyDB.myName
+            cell.statusLabel.text = MyDB.myStatus
         } else if indexPath.section == 1 {
-            cell.profilePhoto.image = UIImage(systemName: "folder.fill")
-            cell.nameLabel.text = "이름"
-            cell.statusLabel.text = "자기소개"
+            print(randInt)
+            print(indexPath.row)
+            print(MyDB.imageList)
+            print(MyDB.nameList)
+            print(MyDB.statusList)
+            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].download_url)!))
+            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
+            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
         } else {
             return UITableViewCell()
         }

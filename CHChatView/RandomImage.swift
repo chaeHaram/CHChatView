@@ -8,5 +8,5 @@
 import UIKit
 
 struct RandomImage: Decodable {
-    let url: String
+    let download_url: String
 }

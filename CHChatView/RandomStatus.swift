@@ -12,5 +12,5 @@ struct adviceList: Decodable {
 }
 
 struct RandomStatus: Decodable {
-    let slip: [adviceList]
+    let slip: adviceList
 }
