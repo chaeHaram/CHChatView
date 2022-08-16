@@ -17,9 +17,6 @@ class ViewController: UIViewController {
 
     var randInt: Int = Int.random(in: 1...5)
     var sectionName: [String] = ["", "친구"]
-    let imageList = MyDB.imageList
-    let nameList = MyDB.nameList
-    let statusList = MyDB.statusList
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,9 +25,7 @@ class ViewController: UIViewController {
         setConstraints()
         
         for _ in 0..<randInt - 1 {
-            appendImage()
-            appendName()
-            appendStatus()
+            apiFetch()
         }
         
         configureTableView()
@@ -40,19 +35,6 @@ class ViewController: UIViewController {
         title = "친구"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-//        configureData()
-//        print()
-    }
-    
-//    func configureData() {
-//        let imageList = MyDB.imageList
-//        let nameList = MyDB.nameList
-//        let statusList = MyDB.statusList
-//    }
     
     func configureTableView() {
         chattingTableView.delegate = self
@@ -73,8 +55,8 @@ class ViewController: UIViewController {
         chattingTableView.topAnchor.constraint(equalTo: safeArea.topAnchor).isActive = true
         chattingTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor).isActive = true
     }
-    
-    func appendImage() {
+
+    func apiFetch() {
         ImageAPI().downloadImage { image, result in
             guard let image = image else {
                 print("result : \(result)")
@@ -82,14 +64,8 @@ class ViewController: UIViewController {
             }
             let imageInfo = RandomImage(download_url: image.download_url)
             MyDB.imageList.append(imageInfo)
-            DispatchQueue.main.async {
-                self.chattingTableView.reloadData()
-            }
-            print(MyDB.imageList)
         }
-    }
-    
-    func appendName() {
+        
         NameAPI().downloadName { name, result in
             guard let name = name else {
                 print("result : \(result)")
@@ -97,14 +73,8 @@ class ViewController: UIViewController {
             }
             let nameInfo = RandomName(name: name.name)
             MyDB.nameList.append(nameInfo)
-            DispatchQueue.main.async {
-                self.chattingTableView.reloadData()
-            }
-            print(MyDB.nameList)
         }
-    }
-    
-    func appendStatus() {
+        
         StatusAPI().downloadStatus { status, result in
             guard let status = status else {
                 print("result : \(result)")
@@ -112,10 +82,13 @@ class ViewController: UIViewController {
             }
             let statusInfo = RandomStatus(slip: status.slip)
             MyDB.statusList.append(statusInfo)
-            DispatchQueue.main.async {
-                self.chattingTableView.reloadData()
-            }
+        }
+        
+        DispatchQueue.main.async {
+            print(MyDB.imageList)
+            print(MyDB.nameList)
             print(MyDB.statusList)
+            self.chattingTableView.reloadData()
         }
     }
 }
@@ -134,9 +107,12 @@ extension ViewController: UITableViewDataSource {
             print(MyDB.imageList)
             print(MyDB.nameList)
             print(MyDB.statusList)
-            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].download_url)!))
-            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
-            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
+            cell.profilePhoto.image = UIImage(systemName: "pencil")
+            cell.nameLabel.text = "이름"
+            cell.statusLabel.text = "자기소개"
+//            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].download_url)!))
+//            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
+//            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
         } else {
             return UITableViewCell()
         }
@@ -148,7 +124,7 @@ extension ViewController: UITableViewDataSource {
         if section == 0 {
             return 1
         } else if section == 1 {
-            return randInt - 1
+            return MyDB.imageList.count
         } else {
             return 0
         }
