@@ -62,9 +62,6 @@ class ViewController: UIViewController {
     }
 
     func apiFetch() {
-        // 동기 - 비동기
-        // 동기 : 일꾼이 세명이 있어도 한명이 1 -> 2 -> 3으로 처리
-        // 비동기 : 일꾼이 세명이 있으면 세명이 일 하나씩 맡아서 처리
         let group = DispatchGroup()
         
         group.enter()
