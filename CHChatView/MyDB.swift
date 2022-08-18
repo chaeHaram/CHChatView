@@ -9,11 +9,19 @@ import Foundation
 import UIKit
 
 struct MyDB {
-    static var imageList: [RandomImage] = []
-    static var nameList: [RandomName] = []
-    static var statusList: [RandomStatus] = []
+    static var imageList: [UIImage] = []
+    static var nameList: [String] = []
+    static var statusList: [String] = []
     
-    static var myImage: UIImage = UIImage(named: "myImage")!
-    static var myName: String = "정찬욱"
-    static var myStatus: String = "이게 전대용~"
+    static var friendProfile: [Profile] = []
+    
+    static var myProfile: Profile = Profile(image: UIImage(named: "myImage")!, name: "정찬욱", status: "이게 전대용~")
+    static var selectProfile: Profile?
+
+}
+
+struct Profile {
+    var image: UIImage
+    var name: String
+    var status: String
 }
