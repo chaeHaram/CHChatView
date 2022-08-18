@@ -7,6 +7,10 @@
 
 import UIKit
 
-struct RandomImage: Decodable {
-    let download_url: String
+struct RandomImage: Codable {
+    let downloadUrl: String
+    
+    enum CodingKeys: String, CodingKey {
+        case downloadUrl = "download_url"
+    }
 }
