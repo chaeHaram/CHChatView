@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         return tableView
     }()
 
-    var randInt: Int = Int.random(in: 1...5)
+    var randInt: Int = Int.random(in: 2...5)
     var sectionName: [String] = ["", "친구"]
     
     override func viewDidLoad() {
@@ -23,17 +23,22 @@ class ViewController: UIViewController {
         
         addSubView()
         setConstraints()
-        
-        for _ in 0..<randInt - 1 {
-            apiFetch()
-        }
-        
         configureTableView()
         
         sectionName[1] = "친구 \(randInt - 1)"
         
         title = "친구"
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        DispatchQueue.global().async {
+            for _ in 0..<self.randInt - 1 {
+                self.apiFetch()
+            }
+        }
     }
     
     func configureTableView() {
@@ -57,15 +62,23 @@ class ViewController: UIViewController {
     }
 
     func apiFetch() {
+        // 동기 - 비동기
+        // 동기 : 일꾼이 세명이 있어도 한명이 1 -> 2 -> 3으로 처리
+        // 비동기 : 일꾼이 세명이 있으면 세명이 일 하나씩 맡아서 처리
+        let group = DispatchGroup()
+        
+        group.enter()
         ImageAPI().downloadImage { image, result in
             guard let image = image else {
                 print("result : \(result)")
                 return
             }
-            let imageInfo = RandomImage(download_url: image.download_url)
+            let imageInfo = RandomImage(downloadUrl: image.downloadUrl)
             MyDB.imageList.append(imageInfo)
+            group.leave()
         }
         
+        group.enter()
         NameAPI().downloadName { name, result in
             guard let name = name else {
                 print("result : \(result)")
@@ -73,8 +86,10 @@ class ViewController: UIViewController {
             }
             let nameInfo = RandomName(name: name.name)
             MyDB.nameList.append(nameInfo)
+            group.leave()
         }
         
+        group.enter()
         StatusAPI().downloadStatus { status, result in
             guard let status = status else {
                 print("result : \(result)")
@@ -82,12 +97,9 @@ class ViewController: UIViewController {
             }
             let statusInfo = RandomStatus(slip: status.slip)
             MyDB.statusList.append(statusInfo)
+            group.leave()
         }
-        
-        DispatchQueue.main.async {
-            print(MyDB.imageList)
-            print(MyDB.nameList)
-            print(MyDB.statusList)
+        group.notify(queue: .main) {
             self.chattingTableView.reloadData()
         }
     }
@@ -102,17 +114,12 @@ extension ViewController: UITableViewDataSource {
             cell.nameLabel.text = MyDB.myName
             cell.statusLabel.text = MyDB.myStatus
         } else if indexPath.section == 1 {
-            print(randInt)
-            print(indexPath.row)
-            print(MyDB.imageList)
-            print(MyDB.nameList)
-            print(MyDB.statusList)
-            cell.profilePhoto.image = UIImage(systemName: "pencil")
-            cell.nameLabel.text = "이름"
-            cell.statusLabel.text = "자기소개"
-//            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].download_url)!))
-//            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
-//            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
+//            cell.profilePhoto.image = UIImage(systemName: "pencil")
+//            cell.nameLabel.text = "이름"
+//            cell.statusLabel.text = "자기소개"
+            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].downloadUrl)!))
+            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
+            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
         } else {
             return UITableViewCell()
         }
