@@ -73,7 +73,7 @@ class ChattingTableViewCell: UITableViewCell {
         
     }
     
-    func setConstraints() {
+    func setConstraints() { 
         profilePhoto.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
         profilePhoto.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         profilePhoto.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true

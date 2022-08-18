@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         return tableView
     }()
 
-    var randInt: Int = Int.random(in: 2...5)
+    var randInt: Int = Int.random(in: 1...5)
     var sectionName: [String] = ["", "친구"]
     
     override func viewDidLoad() {
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         setConstraints()
         configureTableView()
         
-        sectionName[1] = "친구 \(randInt - 1)"
+        sectionName[1] = "친구 \(randInt)"
         
         title = "친구"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -35,7 +35,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         DispatchQueue.global().async {
-            for _ in 0..<self.randInt - 1 {
+            for _ in 0..<self.randInt {
                 self.apiFetch()
             }
         }
@@ -73,8 +73,10 @@ class ViewController: UIViewController {
                 print("result : \(result)")
                 return
             }
-            let imageInfo = RandomImage(downloadUrl: image.downloadUrl)
-            MyDB.imageList.append(imageInfo)
+            let imageInfo = image.downloadUrl
+            let imageUrl: URL = URL(string: imageInfo)!
+            let imageData = try! Data(contentsOf: imageUrl)
+            MyDB.imageList.append(UIImage(data: imageData)!)
             group.leave()
         }
         
@@ -84,7 +86,7 @@ class ViewController: UIViewController {
                 print("result : \(result)")
                 return
             }
-            let nameInfo = RandomName(name: name.name)
+            let nameInfo = name.name
             MyDB.nameList.append(nameInfo)
             group.leave()
         }
@@ -95,12 +97,24 @@ class ViewController: UIViewController {
                 print("result : \(result)")
                 return
             }
-            let statusInfo = RandomStatus(slip: status.slip)
+            let statusInfo = status.slip.advice
             MyDB.statusList.append(statusInfo)
             group.leave()
         }
+        
         group.notify(queue: .main) {
             self.chattingTableView.reloadData()
+        }
+    }
+    
+    func friendProfile() {
+        let imageList = MyDB.imageList
+        let nameList = MyDB.nameList
+        let statusList = MyDB.statusList
+        for index in 0...randInt-1 {
+            print(index)
+            MyDB.friendProfile[index] = Profile(image: imageList[index], name: nameList[index], status: statusList[index])
+            print(MyDB.friendProfile[index])
         }
     }
 }
@@ -110,16 +124,13 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as? ChattingTableViewCell else { return UITableViewCell() }
         
         if indexPath.section == 0 {
-            cell.profilePhoto.image = MyDB.myImage
-            cell.nameLabel.text = MyDB.myName
-            cell.statusLabel.text = MyDB.myStatus
+            cell.profilePhoto.image = MyDB.myProfile.image
+            cell.nameLabel.text = MyDB.myProfile.name
+            cell.statusLabel.text = MyDB.myProfile.status
         } else if indexPath.section == 1 {
-//            cell.profilePhoto.image = UIImage(systemName: "pencil")
-//            cell.nameLabel.text = "이름"
-//            cell.statusLabel.text = "자기소개"
-            cell.profilePhoto.image = UIImage(data: try! Data(contentsOf: URL(string: MyDB.imageList[indexPath.row].downloadUrl)!))
-            cell.nameLabel.text = MyDB.nameList[indexPath.row].name
-            cell.statusLabel.text = MyDB.statusList[indexPath.row].slip.advice
+            cell.profilePhoto.image = MyDB.friendProfile[indexPath.row].image
+            cell.nameLabel.text = MyDB.friendProfile[indexPath.row].name
+            cell.statusLabel.text = MyDB.friendProfile[indexPath.row].status
         } else {
             return UITableViewCell()
         }
@@ -131,7 +142,7 @@ extension ViewController: UITableViewDataSource {
         if section == 0 {
             return 1
         } else if section == 1 {
-            return MyDB.imageList.count
+            return MyDB.friendProfile.count
         } else {
             return 0
         }
@@ -143,6 +154,9 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionName[section]
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
     
 }

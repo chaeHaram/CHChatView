@@ -14,6 +14,7 @@
 		833DD7CD28A665780019B379 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 833DD7CC28A665780019B379 /* Assets.xcassets */; };
 		833DD7D028A665780019B379 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 833DD7CE28A665780019B379 /* LaunchScreen.storyboard */; };
 		833DD7D828A66E6E0019B379 /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */; };
+		83C37B1428AE253700DE1326 /* DetailProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C37B1328AE253700DE1326 /* DetailProfileViewController.swift */; };
 		83C60D2A28A7FF9800D1C64D /* MyDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C60D2928A7FF9800D1C64D /* MyDB.swift */; };
 		83C60D2C28A801F400D1C64D /* ImageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C60D2B28A801F400D1C64D /* ImageAPI.swift */; };
 		83C60D2E28A8026400D1C64D /* RandomImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C60D2D28A8026400D1C64D /* RandomImage.swift */; };
@@ -34,6 +35,7 @@
 		833DD7CF28A665780019B379 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		833DD7D128A665780019B379 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingTableViewCell.swift; sourceTree = "<group>"; };
+		83C37B1328AE253700DE1326 /* DetailProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailProfileViewController.swift; sourceTree = "<group>"; };
 		83C60D2928A7FF9800D1C64D /* MyDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDB.swift; sourceTree = "<group>"; };
 		83C60D2B28A801F400D1C64D /* ImageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAPI.swift; sourceTree = "<group>"; };
 		83C60D2D28A8026400D1C64D /* RandomImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomImage.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				833DD7C328A665770019B379 /* AppDelegate.swift */,
 				833DD7C528A665770019B379 /* SceneDelegate.swift */,
 				833DD7D728A66E6E0019B379 /* ChattingTableViewCell.swift */,
+				83C37B1328AE253700DE1326 /* DetailProfileViewController.swift */,
 				833DD7C728A665770019B379 /* ViewController.swift */,
 				83CBFF2C28A81806002955C9 /* APISession.swift */,
 				83C60D2B28A801F400D1C64D /* ImageAPI.swift */,
@@ -167,6 +170,7 @@
 			files = (
 				833DD7C828A665770019B379 /* ViewController.swift in Sources */,
 				83CBFF2B28A817A0002955C9 /* StatusAPI.swift in Sources */,
+				83C37B1428AE253700DE1326 /* DetailProfileViewController.swift in Sources */,
 				83CBFF2928A8144D002955C9 /* NameAPI.swift in Sources */,
 				833DD7C428A665770019B379 /* AppDelegate.swift in Sources */,
 				83C60D2C28A801F400D1C64D /* ImageAPI.swift in Sources */,
