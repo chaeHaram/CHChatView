@@ -35,6 +35,7 @@ class ChattingTableViewCell: UITableViewCell {
         label.text = "자기소개"
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .lightGray
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.init(rawValue: 251), for: .horizontal)
         label.setContentHuggingPriority(.init(rawValue: 251), for: .vertical)
