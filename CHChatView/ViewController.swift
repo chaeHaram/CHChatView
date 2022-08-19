@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         return tableView
     }()
 
-    var randInt: Int = Int.random(in: 1...5)
+    var randInt: Int = Int.random(in: 1...1)
     var sectionName: [String] = ["", "친구"]
     
     override func viewDidLoad() {
@@ -35,9 +35,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         DispatchQueue.global().async {
-            for _ in 0..<self.randInt {
-                self.apiFetch()
-            }
+            self.apiFetch()
         }
     }
     
@@ -65,53 +63,71 @@ class ViewController: UIViewController {
         let group = DispatchGroup()
         
         group.enter()
-        ImageAPI().downloadImage { image, result in
-            guard let image = image else {
-                print("result : \(result)")
-                return
+        for _ in 0..<self.randInt {
+            ImageAPI().downloadImage { image, result in
+                guard let image = image else {
+                    print("result : \(result)")
+                    return
+                }
+                let imageInfo = image.downloadUrl
+                let imageUrl: URL = URL(string: imageInfo)!
+                let imageData = try! Data(contentsOf: imageUrl)
+                MyDB.imageList.append(UIImage(data: imageData)!)
+//                print(MyDB.imageList)
+                print("image OK")
+                group.leave()
             }
-            let imageInfo = image.downloadUrl
-            let imageUrl: URL = URL(string: imageInfo)!
-            let imageData = try! Data(contentsOf: imageUrl)
-            MyDB.imageList.append(UIImage(data: imageData)!)
-            group.leave()
         }
         
-        group.enter()
-        NameAPI().downloadName { name, result in
-            guard let name = name else {
-                print("result : \(result)")
-                return
+        for _ in 0..<self.randInt {
+            group.enter()
+            NameAPI().downloadName { name, result in
+                guard let name = name else {
+                    print("result : \(result)")
+                    return
+                }
+                let nameInfo = name.name
+                MyDB.nameList.append(nameInfo)
+//                print(MyDB.nameList)
+                print("name OK")
+                group.leave()
             }
-            let nameInfo = name.name
-            MyDB.nameList.append(nameInfo)
-            group.leave()
         }
         
-        group.enter()
-        StatusAPI().downloadStatus { status, result in
-            guard let status = status else {
-                print("result : \(result)")
-                return
+        for _ in 0..<self.randInt {
+            group.enter()
+            StatusAPI().downloadStatus { status, result in
+                guard let status = status else {
+                    print("result : \(result)")
+                    return
+                }
+                let statusInfo = status.slip.advice
+                MyDB.statusList.append(statusInfo)
+//                print(MyDB.statusList)
+                print("status OK")
+                group.leave()
             }
-            let statusInfo = status.slip.advice
-            MyDB.statusList.append(statusInfo)
-            group.leave()
         }
         
         group.notify(queue: .main) {
-            self.chattingTableView.reloadData()
+                self.friendProfile()
+                print("friend끝")
+                self.chattingTableView.reloadData()
+                print("reload")
         }
     }
     
     func friendProfile() {
-        let imageList = MyDB.imageList
-        let nameList = MyDB.nameList
-        let statusList = MyDB.statusList
-        for index in 0...randInt-1 {
+        print("friend 시작")
+        for index in 0...randInt - 1 {
+            let image = MyDB.imageList[index]
+            let name = MyDB.nameList[index]
+            let status = MyDB.statusList[index]
             print(index)
-            MyDB.friendProfile[index] = Profile(image: imageList[index], name: nameList[index], status: statusList[index])
-            print(MyDB.friendProfile[index])
+            print(MyDB.imageList[index])
+            print(MyDB.nameList[index])
+            print(MyDB.statusList[index])
+            MyDB.friendProfile.append(Profile(image: image, name: name, status: status))
         }
     }
 }
@@ -154,6 +170,15 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let detailVC = storyboard?.instantiateViewController(withIdentifier: DetailProfileViewController.storyID) as? DetailProfileViewController else { return }
+        if indexPath.section == 0 {
+            MyDB.selectProfile = MyDB.myProfile
+            print("clicked")
+        } else if indexPath.section == 1 {
+            MyDB.selectProfile = MyDB.friendProfile[indexPath.row]
+            print("clicked")
+        }
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
 }
