@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         return tableView
     }()
 
-    var randInt: Int = Int.random(in: 1...1)
+    var randInt: Int = Int.random(in: 1...5)
     var sectionName: [String] = ["", "친구"]
     
     override func viewDidLoad() {
@@ -62,8 +62,8 @@ class ViewController: UIViewController {
     func apiFetch() {
         let group = DispatchGroup()
         
-        group.enter()
         for _ in 0..<self.randInt {
+            group.enter()
             ImageAPI().downloadImage { image, result in
                 guard let image = image else {
                     print("result : \(result)")
@@ -73,10 +73,9 @@ class ViewController: UIViewController {
                 let imageUrl: URL = URL(string: imageInfo)!
                 let imageData = try! Data(contentsOf: imageUrl)
                 MyDB.imageList.append(UIImage(data: imageData)!)
-//                print(MyDB.imageList)
                 print("image OK")
                 group.leave()
-            }
+                }
         }
         
         for _ in 0..<self.randInt {
@@ -88,7 +87,6 @@ class ViewController: UIViewController {
                 }
                 let nameInfo = name.name
                 MyDB.nameList.append(nameInfo)
-//                print(MyDB.nameList)
                 print("name OK")
                 group.leave()
             }
@@ -103,18 +101,17 @@ class ViewController: UIViewController {
                 }
                 let statusInfo = status.slip.advice
                 MyDB.statusList.append(statusInfo)
-//                print(MyDB.statusList)
                 print("status OK")
                 group.leave()
             }
         }
         
         group.notify(queue: .main) {
-                self.friendProfile()
-                print("friend끝")
-                self.chattingTableView.reloadData()
-                print("reload")
+            self.friendProfile()
+            self.chattingTableView.reloadData()
+            print("reload")
         }
+        
     }
     
     func friendProfile() {
@@ -123,12 +120,9 @@ class ViewController: UIViewController {
             let image = MyDB.imageList[index]
             let name = MyDB.nameList[index]
             let status = MyDB.statusList[index]
-            print(index)
-            print(MyDB.imageList[index])
-            print(MyDB.nameList[index])
-            print(MyDB.statusList[index])
             MyDB.friendProfile.append(Profile(image: image, name: name, status: status))
         }
+        print("friend ok")
     }
 }
 
