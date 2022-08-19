@@ -9,6 +9,16 @@ import UIKit
 
 class DetailProfileViewController: UIViewController {
     
+    enum ViewType {
+        case myProfile
+        case friendProfile
+    }
+    
+//    static let storyboardName = "Main"
+    static let storyID = "DetailVC"
+    
+    static var viewType: ViewType = .myProfile
+    
     let uiView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -64,26 +74,48 @@ class DetailProfileViewController: UIViewController {
         return previousButton
     }()
     
-    let profileEditButton: UIButton = {
-        let profileEditButton = UIButton()
-        profileEditButton.setTitle("프로필 편집", for: .normal)
-        profileEditButton.setImage(UIImage(systemName: "pencil.fill"), for: .normal)
-        profileEditButton.translatesAutoresizingMaskIntoConstraints = false
-        return profileEditButton
+    let chattingButton: UIButton = {
+        let chattingButton = UIButton()
+        if viewType == .myProfile {
+            chattingButton.setTitle("나와의 채팅", for: .normal)
+        } else {
+            chattingButton.setTitle("1:1 채팅", for: .normal)
+        }
+        chattingButton.setImage(UIImage(systemName: "message.fill"), for: .normal)
+        chattingButton.translatesAutoresizingMaskIntoConstraints = false
+        return chattingButton
     }()
     
-    let friendManagementButton: UIButton = {
-        let friendManagementButton = UIButton()
-        friendManagementButton.setTitle("친구 관리", for: .normal)
-        friendManagementButton.setImage(UIImage(systemName: "person.fill"), for: .normal)
-        friendManagementButton.translatesAutoresizingMaskIntoConstraints = false
-        return friendManagementButton
+    let editOrCallButton: UIButton = {
+        let editOrCallButton = UIButton()
+        if viewType == .myProfile {
+            editOrCallButton.setTitle("프로필 편집", for: .normal)
+            editOrCallButton.setImage(UIImage(systemName: "person.fill"), for: .normal)
+        } else {
+            editOrCallButton.setTitle("통화하기", for: .normal)
+            editOrCallButton.setImage(UIImage(systemName: "phone.fill"), for: .normal)
+        }
+        editOrCallButton.translatesAutoresizingMaskIntoConstraints = false
+        return editOrCallButton
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        uiView.backgroundColor = randomColor()
+        
         addSubView()
+        setConstraints()
+    }
+    
+    func randomColor() -> UIColor {
+        let redValue = CGFloat(drand48())
+        let greenValue = CGFloat(drand48())
+        let blueValue = CGFloat(drand48())
+        
+        let randomColor = UIColor(red: redValue, green: greenValue, blue: blueValue, alpha: 1.0)
+        
+        return randomColor
     }
     
     func addSubView() {
@@ -93,8 +125,8 @@ class DetailProfileViewController: UIViewController {
         verticalStackView.addArrangedSubview(profileNameLabel)
         verticalStackView.addArrangedSubview(profileStatusLabel)
         uiView.addSubview(horizontalStackView)
-        horizontalStackView.addArrangedSubview(profileEditButton)
-        horizontalStackView.addArrangedSubview(friendManagementButton)
+        horizontalStackView.addArrangedSubview(chattingButton)
+        horizontalStackView.addArrangedSubview(editOrCallButton)
         uiView.addSubview(previousViewControllerMoveButton)
     }
     
@@ -102,5 +134,13 @@ class DetailProfileViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         uiView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor).isActive = true
         uiView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor).isActive = true
+        uiView.heightAnchor.constraint(equalTo: uiView.widthAnchor, multiplier: 1.7).isActive = true
+        verticalStackView.centerXAnchor.constraint(equalTo: uiView.centerXAnchor).isActive = true
+        verticalStackView.centerYAnchor.constraint(equalTo: uiView.centerYAnchor).isActive = true
+        previousViewControllerMoveButton.leadingAnchor.constraint(equalTo: uiView.leadingAnchor, constant: 15).isActive = true
+        previousViewControllerMoveButton.topAnchor.constraint(equalTo: uiView.topAnchor, constant: 15).isActive = true
+        horizontalStackView.bottomAnchor.constraint(equalTo: uiView.bottomAnchor).isActive = true
+        horizontalStackView.centerXAnchor.constraint(equalTo: uiView.centerXAnchor).isActive = true
+        
     }
 }
