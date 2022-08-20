@@ -164,6 +164,8 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
         guard let detailVC = storyboard?.instantiateViewController(withIdentifier: DetailProfileViewController.storyID) as? DetailProfileViewController else { return }
         if indexPath.section == 0 {
             MyDB.selectProfile = MyDB.myProfile
